@@ -1,7 +1,15 @@
-import { CapsuleGeometry, Group, Mesh, MeshBasicMaterial, Vector3 } from "three";
+import {
+  CapsuleGeometry,
+  Group,
+  Mesh,
+  MeshBasicMaterial,
+  Vector3,
+} from "three";
 import { camera, scene } from "./World";
+import { useSpherePhysics } from "./Physics/MeshPhysics";
+import { PHYSICS_WORLD } from "../main";
 
-export let container,model;
+export let container, model, playerPhysics;
 const cameraOrigin = new Vector3(0, 0.6, 0);
 export const LocalPlayer = () => {
   //   Container and Camera
@@ -19,6 +27,9 @@ export const LocalPlayer = () => {
 
   container.add(camera);
   container.add(capsule);
+  playerPhysics = useSpherePhysics(0.4);
+  playerPhysics.position.set(0, 0.404, 0);
+  PHYSICS_WORLD.addBody(playerPhysics);
 
   scene.add(container);
 };

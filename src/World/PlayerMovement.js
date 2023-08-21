@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { container, model } from "./Player";
+import { container, model, playerPhysics } from "./Player";
 import { camera } from "./World";
 import { movingBackward, movingForward } from "./useKeyboard";
 
@@ -36,13 +36,28 @@ export const PlayerMovement = () => {
     }
 
     // Rotate the model by a tiny value towards the camera direction
+
+    let WalkSpeed = 3;
+    let WalkBackSpeed = -2;
     if (movingForward) {
-      container.position.add(cameraDirection.multiplyScalar(0.065));
+      playerPhysics.velocity.set(
+        cameraDirection.x * WalkSpeed,
+        cameraDirection.y * WalkSpeed,
+        cameraDirection.z * WalkSpeed
+      );
+      container.position.copy(playerPhysics.position);
+    } else if (movingBackward) {
+      playerPhysics.velocity.set(
+        cameraDirection.x * WalkBackSpeed,
+        cameraDirection.y * WalkBackSpeed,
+        cameraDirection.z * WalkBackSpeed
+      );
+      container.position.copy(playerPhysics.position);
     }
-    else if(movingBackward) {
-      container.position.sub(cameraDirection.multiplyScalar(0.065));
-    }
-    
+
     camera.lookAt(container.position.clone().add(cameraOrigin));
+  }else {
+    playerPhysics.velocity.set(0, 0, 0);
+    playerPhysics.angularDamping = 0;
   }
 };
